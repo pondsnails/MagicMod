@@ -1,0 +1,67 @@
+tips:
+    IntelliJ Ctrl + Shift + R でプロジェクト内のターゲットを検索及び置換する
+
+    entityのXRot,YRotはYが前後左右の角度(0 ~ 360)、Xが上下の角度(-90 ~ 90)。
+        Yの0が南、Yの90が西、Yの180が北、Yの270が東。
+        Xの-90が上、Xの0が平行、Xの90が下。
+
+    RenderSystem.disableCull()を用いることにより、Particleの両面にテクスチャを反映させることができる
+
+
+//        float mahoujinDistance = 3.0f;
+//        float mahoujinXDistance = 3.0F;
+//        float particleXPos;
+//        float particleYPos;
+//        float particleZPos;
+//        float playerFacedXDegree = playerEntity.xRot;
+//        float playerFacedYDegree = playerEntity.yHeadRot;
+//        float playerFacedXRadian = (float) Math.toRadians(playerFacedXDegree);
+//        float playerFacedYRadian = (float) Math.toRadians(playerFacedYDegree);
+
+        times++;
+//        for (int p = 1; p < times; p++) {
+//            if (!timesList.contains(p)) {
+//                System.out.println("This number(" + p + ") does not exist in list!!");
+//                times = p;
+//            }
+//        }
+
+        timesList.add(times);
+
+//        isUsing = true;
+//        particleNum = times - 1;
+//
+//
+//        if (playerFacedXDegree < -15) {
+//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * mahoujinDistance + 1.5F);
+//        } else if (playerFacedXDegree < 40) {
+//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * mahoujinDistance + 1.0F);
+//        } else {
+//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * mahoujinDistance + 0.5F);
+//        }
+//
+//        particleXPos = (float) (playerEntity.getX() - Math.sin(playerFacedYRadian) * Math.abs(Math.cos(playerFacedXRadian)) * mahoujinXDistance);
+//        particleZPos = (float) (playerEntity.getZ() + Math.cos(playerFacedYRadian) * Math.abs(Math.cos(playerFacedXRadian)) * mahoujinXDistance);
+//
+//        float superMagicDistance = 40f;
+//        float superMagicX = (float) (playerEntity.getX() - Math.sin(playerFacedYRadian) * superMagicDistance);
+//        float superMagicZ = (float) (playerEntity.getZ() + Math.cos(playerFacedYRadian) * superMagicDistance);
+//
+//        superMagicCirclePos = new Vector3d(superMagicX,playerEntity.getY(),superMagicZ);
+//
+//        particlePos = new Vector3d(particleXPos, particleYPos, particleZPos);
+//
+//        MagicParticleData magicParticleData = new MagicParticleData(0, 0, 0, 100, 100);
+//
+//        world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+//
+//        particles.add(particleNum, summonMagicParticle(particlePos));
+//        particles.get(particleNum).setPlayerEntity(playerEntity);
+//
+//        summonParticle(world, playerEntity, particlePos, hand);
+
+//        playerEntity.getCooldowns().addCooldown(this, 5 * 20);
+
+        System.out.println("Times : " + timesList);
+
+        return super.use(world, playerEntity, hand);

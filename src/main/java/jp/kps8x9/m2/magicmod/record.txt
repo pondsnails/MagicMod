@@ -1,0 +1,148 @@
+2021/05/19:
+    MagicWandBase,MagicWandのアイテム登録を完了
+    MagicWandのテクスチャを適用
+    MahoujinBaseの粗方の構想を考え中。EntityクラスをスーパークラスとしてTick(BaseTick?)メソッドを回転に充てる予定。
+
+2021/05/20:
+
+    MahoujinBaseをEnderCrystalEntityをスーパークラスとして設計。
+    また、EnderCrystalEntityより、setBeamTargetを改変してビームを作る予定
+
+2021/05/22:
+
+    MahoujinbaseをItemEntityをスーパークラスにしてTickメソッドの書き換え。
+    SmallMahoujinEntityとSmallMahoujinRendererをほぼ完成まで持ってきた。(MinecraftByExample-masterより)
+    課題としては魔法陣がEntityとしてファイルが大きすぎて、魔法陣をサモンした際に落ちること。
+    ->魔法陣のファイルを変える、もしくはポリゴン数を減らす
+
+   夜
+    MahoujinRendererでNullPointerExceptionにより落ちていたことが判明。
+    ログは MeteoriteMod/run/crash-reports/crash-2021-05-23_02.25.45-client.txt 等による
+    RendererのRegistryの方法やResourceLocationを変更するも、エラーのまま。
+
+2021/05/23:
+
+    MahoujinBaseのスーパークラスをEntityに変更。
+    それによりNullPointerExceptionが発生しなくなったが、モデルが表示されないため、テクスチャをobjファイルに変更する予定。
+    -> objファイルに変更するも、テクスチャが反映されずに開発に難航。テクスチャをjsonファイルに変更する予定。
+
+2021/05/24:
+
+    プロジェクト全体の変更:
+        MahoujinBaseのスーパークラスをMagicEffectとし、MagicEffectのスーパークラスをEntityとする。これからMagicEffectをスーパークラスとしてエフェクトを作る予定
+        MagicWandBase等のアイテムをMagicItemをインターフェースとするクラスにする予定。
+
+    モデルをjsonファイルに変更するも効果なし。また、Javaファイルに変換するもMobEntity以外のコンストラクタにはModelクラスが含まれておらず、難航。->失敗
+    objファイルを使い、MinecraftByExample-masterの通りにモデルを指定するも変化なし。尚、この参照元はバージョンが1.16.4とひとつ前のため新バージョンに対応したコードを書けばいける可能性もある。
+
+    解決策:
+        Javaファイルに変換し、そもそものMagicEffectクラスのコンストラクタにModelを追加させる
+        objファイルを使い、正しいResourceLocationの指定、ファイルの正しい配置を導入する。
+
+    -> Javaファイルに変換をし、SmallMahoujinModelを生成するもIllegalStateExceptionが発生したため、MatrixStackのposeStackのサイズが1ではないと判明。
+
+    -> objファイルを使うも未だにテクスチャが適用されず。
+
+2021/05/25:
+
+    -> JavaファイルのIllegalStateExceptionの発生の原因はpopPoseをpushPoseと間違えていたため。
+
+    その問題は改善したため、Javaファイルによるモデルが表示されるようにはなったものの魔法陣の表示が正しくされない。
+    しかし、サイト(https://neutrino.v2mcdev.com/entity/scratchentity.html)にある剣のモデルは問題なく表示された。
+    つまり、魔法陣のモデルに問題が発生していることがわかった。
+
+        解決策:
+            現状、正しく動作するモデルとの違いはModel内のtexOffsとaddBoxが結合しているか分離しているかの違いであるため、そこを試しに変更する予定。
+
+    -> texOffsとaddBoxを分離するも、変化はなかった為、Blockbenchのjava変換が現在のバージョンに問題があるのではないかと思われる。
+
+2021/05/26
+
+    ->Entityは小数点が含まれるキューブがあると不具合が起こるのではないかと思い、魔法陣のベースをParticleに変更。
+
+    プロジェクト全体の変更:
+        MahoujinEntity,MahoujinBaseクラスをMagicParticleに変更する
+
+    ParticleやParticleFactoryの追加には不具合は起こらなかったものの、マイクラ内でコマンドを用いて、MagicParticleを発生させようとすると、
+    "An unexpected error occurred trying to execute that command"とマイクラのログに表示され、Particleを呼び出すことができなかった。
+
+2021/05/29 ~ 2021/05/30
+
+    ->MagicParticleは発生させることができたが、Particleのテクスチャが反映されていない模様。
+
+2021/06/01
+
+    ->いままでと同じ変更を試してみると"なぜか"テクスチャが反映されたのでとりあえずはMagicParticleを反映させることができた。
+    が、方向が自動的にプレイヤーを向くので、それを変更する予定。
+
+        解決策:
+            TexturedParticleのrenderメソッド内のquaternionの変更によるものであると考えられるためそれを変更する。
+
+    -> Quaternion(?)を理解するのにかなりの時間を要しそう
+
+        -> 取り敢えずはMagicParticleの方向はプレイヤーの向きに依存したものを宣言したいため、MagicParticleDataにEntityのフィールドを追加し方向を入手するつもり。
+
+2021/06/02
+
+    -> MagicParticleのquaternionの初期状態をfirstQuaternionに保管し、その値を使用すると、常に同じ方向を向くようになったのでこの方法を使う。
+
+    MagicParticleの裏側に回るとMagicParticleが表示されなくなる。
+
+    また、MagicParticleを回転させようとquaternionの第四引数(角度)と思われる値を増やしつつ宣言するも、サイズが変更されるため恐らく大きさの引数となるはずだが、
+    それだとquaternionの回転軸と回転角度の関係が破綻してしまう。
+
+2021/06/06
+
+    MagicWandBaseのuseメソッドの処理において魔法陣のプレイヤーに相対する位置は関連付けることはできた。
+    おおよそプレイヤーを中心点としてMagicParticleとは2ブロックほどの距離がある。
+
+    ->MagicParticleのQuaternionのサイズ変更に関しては第四引数のrに対して大きすぎる値を入れたための不具合だと思われる
+
+    ->rにsin(tr)とtrを増加していくと正常に動作するも、どうやらMagicParticleの軸の位置がおかしなことになっているため回転の動作が不審になっていた。
+
+    魔法の演出はエンドクリスタルのエンダードラゴンに向かって与える回復のビームを用いようと考えている。
+
+2021/06/08
+
+    ビーム攻撃の先駆者はEntityとして扱っていたので試しにEntityクラスをスーパークラスにしようと考えている。
+
+2021/07/05
+
+    MagicParticleはParticleの性質上、Quaternionを固定すると反対側は映らないようになる
+
+        解決策:
+            完全に真反対の方向のMagicParticleを召喚する。
+            MagicParticleのrenderメソッドに、反対側にプレイヤーが移動したときの処理を書く。
+
+2021/07/07
+
+    ->RenderSystem.disableCull()を用いることにより、Particleの両面にテクスチャを反映させることに成功
+
+2021/07/08
+
+    魔法を放った際に魔方陣の消失を目的とし、MagicWandBaseクラス内のuseメソッド内にてParticleクラスのフィールドを作成。
+    またそれを用い、releaseUsingの際にremove()メソッドを用いParticleの削除を目論見るも反映されない。
+    メソッドが変わったことによりParticleの指定が無効化されたのかと考え、MagicParticleで反応を調べると反応が返ってきた。
+    ->別のMagicParticleが返ってきた。
+
+2021/07/13
+
+    ->別のMagicParticleも出ているということは単一ではなく複数のParticleが出ている ->出てくる全てのParticleを削除すればよい。
+    Particleのインスタンスを保存するparticlesリストを作成し、releaseUsingを使う度にparticles内にあるParticleはすべて削除され、
+    particlesリストはリセットされる。
+
+2021/07/15
+
+    魔法を撃つとBeamBaseというクラスをMagicParticleと同様にリストを作成し、同様の作業を行った。しかし、beamsリストはreleaseUsingの度にエラーが発生する。
+
+   -> releaseUsingが二回行われた際にbeamsリストがnullになってしまうためだった。
+
+   BeamBaseをMagicParticleとPlayer間でのベクトル差によってBeamの位置、速度を決めていたが、MagicParticleの少しのずれにより、思うような方向に向かわないため、
+   MagicWandのスーパークラスであるBowItemの矢をいる行為を用い、矢の重力加速度を無効化し、テクスチャの変更でビーム作るつもり。
+
+2021/07/25
+
+    Beamクラスを作り、魔法を撃った際にRenderWorldLastEventを用い、線を描画する。
+
+2021/07/27
+
