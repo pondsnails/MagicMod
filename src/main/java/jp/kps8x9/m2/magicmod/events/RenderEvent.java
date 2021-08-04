@@ -68,7 +68,6 @@ public class RenderEvent {
         public Vector3d vecEnd;
         public Color color;
         public int count;
-        public int lifeTime;
 
         public Beam(float lineWidth, Vector3d vecStart, Vector3d vecEnd, Color color) {
             this.lineWidth = lineWidth;

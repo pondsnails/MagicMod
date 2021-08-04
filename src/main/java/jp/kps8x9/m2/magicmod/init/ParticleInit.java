@@ -5,7 +5,6 @@ import jp.kps8x9.m2.magicmod.particle.particle_data.MagicParticleData;
 import jp.kps8x9.m2.magicmod.particle.particle_data.SuperMagicParticleData;
 import jp.kps8x9.m2.magicmod.particle.particle_type.MagicParticleType;
 import jp.kps8x9.m2.magicmod.particle.particle_type.SuperMagicParticleType;
-import jp.kps8x9.m2.magicmod.particle.particles.BeamParticle;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleType;
 import net.minecraftforge.eventbus.api.IEventBus;

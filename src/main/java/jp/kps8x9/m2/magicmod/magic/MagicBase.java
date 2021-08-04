@@ -1,6 +1,5 @@
 package jp.kps8x9.m2.magicmod.magic;
 
-import jp.kps8x9.m2.magicmod.particle.particles.BeamParticle;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3d;

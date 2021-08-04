@@ -1,6 +1,5 @@
 package jp.kps8x9.m2.magicmod.init;
 
-import jp.kps8x9.m2.magicmod.particle.particle_factory.BeamParticleFactory;
 import jp.kps8x9.m2.magicmod.particle.particle_factory.MagicParticleFactory;
 import jp.kps8x9.m2.magicmod.particle.particle_factory.SuperMagicParticleFactory;
 import net.minecraft.client.Minecraft;
