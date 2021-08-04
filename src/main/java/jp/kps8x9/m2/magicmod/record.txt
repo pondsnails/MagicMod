@@ -160,4 +160,4 @@
 2021/08/04
 
     particles,superMagicParticles両方をリストではなくした。その代わりに新たなMagicParticleを召喚するたびに以前までのMagicParticleを削除するように変更した。
-    それでもsuperMagicParticleの重複召喚を回避することはできず難航中。
+    それでもまれに起こるsuperMagicParticleの重複召喚を回避することはできず難航中。
