@@ -55,8 +55,6 @@ public class MagicParticle extends SpriteTexturedParticle {
             r = quaternion.r();
             firstQuaternion = quaternion.copy();
 
-            System.out.println("firstQuaternion : " + firstQuaternion);
-
             initialized = true;
         }
 
