@@ -33,18 +33,15 @@ public class MagicWandBase extends BowItem {
     Vector3d particlePos;
     MagicParticle particles;
     SuperMagicParticle superParticles;
-    int times;
-    int superMagicCircleCount;
     Vector3d superMagicCirclePos;
     BooleanArrayList timerBool;
     Vector3d beamEndPos;
     Vector3d explodePos;
+    int particleCount;
 
     public MagicWandBase(Properties properties) {
         super(properties);
-        times = 0;
-        superMagicCircleCount = 0;
-
+        particleCount = 0;
         //timerBoolはsummonParticleの際に行われる処理の終了確認の為のフィールドであってリストである必要はない。
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
@@ -54,19 +51,21 @@ public class MagicWandBase extends BowItem {
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         float mahoujinDistance = 3.0f;
+        particleCount = 0;
 
         isUsing = true;
 
         Vector3d vector = playerEntity.getLookAngle();
 
-        float superMagicDistance = 100f;
+        float superMagicDistance = 70f;
         float superMagicX = (float) (playerEntity.getX() + vector.x * superMagicDistance);
         float superMagicZ = (float) (playerEntity.getZ() + vector.z * superMagicDistance);
 
-        superMagicCirclePos = new Vector3d(superMagicX,160,superMagicZ);
+        superMagicCirclePos = new Vector3d(superMagicX,playerEntity.getY() + 70,superMagicZ);
 
         particlePos = new Vector3d(playerEntity.getX() + vector.x*mahoujinDistance,playerEntity.getY() + playerEntity.getEyeHeight() + vector.y*mahoujinDistance,playerEntity.getZ() + vector.z*mahoujinDistance);
 
+        //Beamの終了地点の計算
         boolean isNotBeamEndPosReady = true;
         int INBEPRcount = 20;
         while (isNotBeamEndPosReady) {
@@ -83,17 +82,18 @@ public class MagicWandBase extends BowItem {
             }
         }
 
+        //Beamの爆発地点の計算
         boolean isNotExplodePosReady = true;
         int INEPRCount = 0;
         while (isNotExplodePosReady) {
             INEPRCount++;
-            BlockPos tentativePos = new BlockPos(beamEndPos.x,superMagicCirclePos.y - INEPRCount,beamEndPos.z);
+            BlockPos tentativePos = new BlockPos(superMagicCirclePos.x,superMagicCirclePos.y - INEPRCount,superMagicCirclePos.z);
             if (!world.isEmptyBlock(tentativePos)) {
-                explodePos = new Vector3d(beamEndPos.x,superMagicCirclePos.y - INEPRCount,beamEndPos.z);
+                explodePos = new Vector3d(superMagicCirclePos.x,superMagicCirclePos.y - INEPRCount,superMagicCirclePos.z);
                 isNotExplodePosReady = false;
             }
             if ((superMagicCirclePos.y - INEPRCount) < 1){
-                explodePos = new Vector3d(beamEndPos.x,0,beamEndPos.z);
+                explodePos = new Vector3d(superMagicCirclePos.x,0,superMagicCirclePos.z);
                 isNotExplodePosReady = false;
             }
         }
@@ -131,6 +131,8 @@ public class MagicWandBase extends BowItem {
         int useDuration = this.getUseDuration(itemStack);
 
         int i = useDuration - count;
+        int time = this.particleCount;
+        System.out.println("Time : " + time);
         float f = getPowerForTime(i);
 
         MagicBase magic = new MagicBase(playerEntity, world, itemStack);
@@ -138,19 +140,19 @@ public class MagicWandBase extends BowItem {
 
         if (!world.isClientSide) {
 
-            if (i < 100) {
+            if (time < 10000) {
                 magic.secondMagic();
                 System.out.println("First Magic was shot");
                 RenderEvent.Beam beam = new RenderEvent.Beam(10,this.particlePos,this.beamEndPos,Color.black);
                 world.playSound(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,SoundEvents.GENERIC_EXPLODE,SoundCategory.PLAYERS, 5.0F, 5.0F);
                 world.explode(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,20.0F, Explosion.Mode.BREAK);
 
-            } else if (i < 200) {
+            } else if (time < 20000) {
                 magic.thirdMagic();
                 System.out.println("Second Magic was shot");
                 beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
                 RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
-                world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
+                world.explode(null,explodePos.x,explodePos.y,explodePos.z,50.0F, Explosion.Mode.BREAK);
 
 
             } else {
@@ -158,10 +160,8 @@ public class MagicWandBase extends BowItem {
                 System.out.println("Third Magic was shot");
                 beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
                 RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
-                world.explode(null,explodePos.x,explodePos.y,explodePos.z,1280.0F, Explosion.Mode.BREAK);
+                world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
             }
-            System.out.println("Count(second):" + i);
-            System.out.println("ExplodePos : " + explodePos);
 
         }
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
@@ -185,36 +185,41 @@ public class MagicWandBase extends BowItem {
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    if (superMagicCircleCount > 20000) {
+
+                    //20秒以上経過時
+                    if (particleCount > 20000) {
 
                         if (timerBool.getBoolean(1)) {
+                            System.out.println("SMCCount : " + particleCount);
                             superParticles.increaseSize();
 
                             timerBool.set(1,false);
                         }
-                    } else if (superMagicCircleCount > 10000) {
+                    }
+                    //10秒から20秒までの間
+                    else if (particleCount > 10000) {
 
                         if (timerBool.getBoolean(0)) {
+                            System.out.println("SMCCount : " + particleCount);
                             if (superParticles != null) {
                                 superParticles.setMagicReleased(true);
                                 superParticles.remove();
-                                System.out.println(superParticles);
                                 System.out.println("SuperMagicParticle has been removed");
                             }
+                            System.out.println(superParticles);
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
                             System.out.println("Summon SuperMagicParticle");
 
                             timerBool.set(0,false);
                             particles.setMagicReleased(true);
                         }
-                    } else {
-                        world.addParticle(particleType, particlePos.x, particlePos.y, particlePos.z, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
-
                     }
-
-                    superMagicCircleCount++;
+                    //それ以外
+                    else {
+                        world.addParticle(particleType, particlePos.x, particlePos.y, particlePos.z, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
+                    }
+                    particleCount++;
                     if (!isUsing) {
-                        superMagicCircleCount = 0;
                         timerBool.set(0,true);
                         timerBool.set(1,true);
                         timer.cancel();

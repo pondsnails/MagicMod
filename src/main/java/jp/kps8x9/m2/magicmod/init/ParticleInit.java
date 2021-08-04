@@ -17,7 +17,6 @@ public class ParticleInit {
 
     public static RegistryObject<ParticleType<MagicParticleData>> magicParticle = PARTICLE_TYPE_DEFERRED_REGISTER.register("magic_particle", () -> new MagicParticleType());
     public static RegistryObject<ParticleType<SuperMagicParticleData>> superMagicParticle = PARTICLE_TYPE_DEFERRED_REGISTER.register("super_magic_particle", () -> new SuperMagicParticleType());
-    public static final RegistryObject<BasicParticleType> beamParticle = PARTICLE_TYPE_DEFERRED_REGISTER.register("beam_particle", () -> new BasicParticleType(true));
 
     public static void register(IEventBus modEventBus) {
         PARTICLE_TYPE_DEFERRED_REGISTER.register(modEventBus);
