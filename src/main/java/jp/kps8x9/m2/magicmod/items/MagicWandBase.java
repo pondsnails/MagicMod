@@ -205,8 +205,10 @@ public class MagicWandBase extends BowItem {
                             if (superParticles != null) {
                                 superParticles.setMagicReleased(true);
                                 superParticles.remove();
+                                System.out.println("SuperMagicParticle has been removed");
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
+                            System.out.println("Summon SuperMagicParticle");
 
                             timerBool.set(0,false);
                             particles.setMagicReleased(true);
