@@ -35,8 +35,8 @@ public class MagicWandBase extends BowItem {
     boolean isUsing;
     BasicParticleType particleType = ParticleTypes.ENCHANT;
     Vector3d particlePos;
-    List<MagicParticle> particles;
-    List<SuperMagicParticle> superParticles;
+    MagicParticle particles;
+    SuperMagicParticle superParticles;
     int times;
     List<Integer> timesList;
     int superMagicCircleCount;
@@ -49,8 +49,6 @@ public class MagicWandBase extends BowItem {
         super(properties);
         times = 0;
         timesList = new ArrayList<Integer>();
-        particles = new ArrayList<MagicParticle>();
-        superParticles = new ArrayList<SuperMagicParticle>();
         superMagicCircleCount = 0;
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
@@ -60,14 +58,6 @@ public class MagicWandBase extends BowItem {
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         float mahoujinDistance = 3.0f;
-
-        times++;
-        for (int p = 1; p < times; p++) {
-            if (!timesList.contains(p)) {
-                System.out.println("This number(" + p + ") does not exist in list!!");
-                times = p;
-            }
-        }
 
         timesList.add(times);
         isUsing = true;
@@ -117,11 +107,15 @@ public class MagicWandBase extends BowItem {
 
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-        particles.add(summonMagicParticle(particlePos));
-        for (int t = 0;t < particles.size();t++) {
-            particles.get(t).setPlayerEntity(playerEntity);
-            particles.get(t).setKeepAlive(true);
+        if (particles != null) {
+            particles.remove();
+            particles = summonMagicParticle(particlePos);
+        } else {
+            particles = summonMagicParticle(particlePos);
         }
+
+        particles.setPlayerEntity(playerEntity);
+        particles.setKeepAlive(true);
 
         summonParticle(world, playerEntity, particlePos, hand);
 
@@ -165,7 +159,7 @@ public class MagicWandBase extends BowItem {
                     System.out.println("Second Magic was shot");
                     beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
                     RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
-                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,80.0F, Explosion.Mode.BREAK);
+                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
 
 
                 } else {
@@ -173,7 +167,7 @@ public class MagicWandBase extends BowItem {
                     System.out.println("Third Magic was shot");
                     beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
                     RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
-                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,200.0F, Explosion.Mode.BREAK);
+                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,320.0F, Explosion.Mode.BREAK);
                 }
                 System.out.println("Count(second):" + i);
                 System.out.println("ExplodePos : " + explodePos);
@@ -183,15 +177,21 @@ public class MagicWandBase extends BowItem {
         }
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
-        for (int q = 0; q < particles.size(); q++) {
-            particles.get(q).setMagicReleased(true);
+//        for (int q = 0; q < particles.size(); q++) {
+//            particles.get(q).setMagicReleased(true);
+//        }
+        if (particles != null) {
+            particles.setMagicReleased(true);
         }
-        for (int r = 0; r < superParticles.size(); r++) {
-            superParticles.get(r).setMagicReleased(true);
+//        for (int r = 0; r < superParticles.size(); r++) {
+//            superParticles.get(r).setMagicReleased(true);
+//        }
+        if (superParticles != null) {
+            superParticles.setMagicReleased(true);
         }
-
-        particles.clear();
-        superParticles.clear();
+//
+//        particles.clear();
+//        superParticles.clear();
         timesList.clear();
     }
 
@@ -209,24 +209,32 @@ public class MagicWandBase extends BowItem {
                     if (superMagicCircleCount > 20000) {
 
                         if (timerBool.getBoolean(1)) {
-                            for (int r = 0; r < superParticles.size(); r++) {
-                                superParticles.get(r).increaseSize();
-                            }
+//                            for (int r = 0; r < superParticles.size(); r++) {
+//                                superParticles.get(r).increaseSize();
+//                            }
+                            superParticles.increaseSize();
 
                             timerBool.set(1,false);
                         }
                     } else if (superMagicCircleCount > 10000) {
 
                         if (timerBool.getBoolean(0)) {
-                            superParticles.add(summonSuperMagicParticle(superMagicCirclePos));
+//                            superParticles.add(summonSuperMagicParticle(superMagicCirclePos));
+                            if (superParticles != null) {
+                                superParticles.remove();
+                                superParticles = summonSuperMagicParticle(superMagicCirclePos);
+                            } else {
+                                superParticles = summonSuperMagicParticle(superMagicCirclePos);
+                            }
 
                             timerBool.set(0,false);
 
-                            for (int q = 0; q < particles.size(); q++) {
-                                particles.get(q).setMagicReleased(true);
-                            }
+//                            for (int q = 0; q < particles.size(); q++) {
+//                                particles.get(q).setMagicReleased(true);
+//                            }
+                            particles.setMagicReleased(true);
 
-                            particles.clear();
+//                            particles.clear();
                         }
                     } else {
                         world.addParticle(particleType, particlePos.x, particlePos.y, particlePos.z, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
