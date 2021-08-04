@@ -104,6 +104,7 @@ public class MagicWandBase extends BowItem {
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (particles != null) {
+            particles.setMagicReleased(true);
             particles.remove();
         }
         particles = summonMagicParticle(particlePos);
@@ -202,6 +203,7 @@ public class MagicWandBase extends BowItem {
 
                         if (timerBool.getBoolean(0)) {
                             if (superParticles != null) {
+                                superParticles.setMagicReleased(true);
                                 superParticles.remove();
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
