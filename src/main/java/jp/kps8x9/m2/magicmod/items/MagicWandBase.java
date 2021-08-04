@@ -36,7 +36,6 @@ public class MagicWandBase extends BowItem {
     MagicParticle particles;
     SuperMagicParticle superParticles;
     int times;
-    List<Integer> timesList;
     int superMagicCircleCount;
     Vector3d superMagicCirclePos;
     BooleanArrayList timerBool;
@@ -46,8 +45,9 @@ public class MagicWandBase extends BowItem {
     public MagicWandBase(Properties properties) {
         super(properties);
         times = 0;
-        timesList = new ArrayList<>();
         superMagicCircleCount = 0;
+
+        //timerBoolはsummonParticleの際に行われる処理の終了確認の為のフィールドであってリストである必要はない。
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
         timerBool.add(1,true);
@@ -57,7 +57,6 @@ public class MagicWandBase extends BowItem {
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         float mahoujinDistance = 3.0f;
 
-        timesList.add(times);
         isUsing = true;
 
         Vector3d vector = playerEntity.getLookAngle();
@@ -175,7 +174,6 @@ public class MagicWandBase extends BowItem {
         if (superParticles != null) {
             superParticles.setMagicReleased(true);
         }
-        timesList.clear();
     }
 
     public void summonExplodeParticles() {
