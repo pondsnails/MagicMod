@@ -144,7 +144,7 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
 
         if (this.age + 5 > this.lifetime){
             if (keepAlive) {
-                age -= 6;
+                lifetime += 6;
             } else {
                 n = 5 - (this.lifetime - this.age);
             }
