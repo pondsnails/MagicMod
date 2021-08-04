@@ -149,7 +149,6 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
                 n = 5 - (this.lifetime - this.age);
             }
         }
-
     }
 
     public void setMagicReleased(boolean magicReleased) {
