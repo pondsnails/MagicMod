@@ -22,6 +22,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import java.awt.*;
@@ -42,6 +43,7 @@ public class MagicWandBase extends BowItem {
     Vector3d superMagicCirclePos;
     BooleanArrayList timerBool;
     Vector3d beamEndPos;
+    Vector3d explodePos;
 
     public MagicWandBase(Properties properties) {
         super(properties);
@@ -58,8 +60,6 @@ public class MagicWandBase extends BowItem {
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         float mahoujinDistance = 3.0f;
-        float mahoujinXDistance = 3.0F;
-        float endBeamDistance = 100f;
 
         times++;
         for (int p = 1; p < times; p++) {
@@ -82,18 +82,34 @@ public class MagicWandBase extends BowItem {
 
         particlePos = new Vector3d(playerEntity.getX() + vector.x*mahoujinDistance,playerEntity.getY() + playerEntity.getEyeHeight() + vector.y*mahoujinDistance,playerEntity.getZ() + vector.z*mahoujinDistance);
 
-        boolean isBeamEndPosReady = true;
-        int IBEPRcount = 0;
-        while (isBeamEndPosReady) {
-            if (IBEPRcount++ > 100) {
-                isBeamEndPosReady = false;
-            }
-            BlockPos tentativePos = new BlockPos((int)(playerEntity.getX() + vector.x * IBEPRcount), (int)(playerEntity.getY() + vector.y * IBEPRcount), (int)(playerEntity.getZ() + vector.z * IBEPRcount));
+        boolean isNotBeamEndPosReady = true;
+        int INBEPRcount = 20;
+        while (isNotBeamEndPosReady) {
+            INBEPRcount++;
+            BlockPos tentativePos = new BlockPos((int)(playerEntity.getX() + vector.x * INBEPRcount), (int)(playerEntity.getY() + vector.y * INBEPRcount), (int)(playerEntity.getZ() + vector.z * INBEPRcount));
 
             if (!world.isEmptyBlock(tentativePos)) {
-                beamEndPos = new Vector3d(playerEntity.getX() + vector.x * IBEPRcount,playerEntity.getY() + vector.y * IBEPRcount,playerEntity.getZ() + vector.z * IBEPRcount);
-                isBeamEndPosReady = false;
-                System.out.println("IBEPRCount : "+IBEPRcount);
+                beamEndPos = new Vector3d(playerEntity.getX() + vector.x * INBEPRcount,playerEntity.getY() + vector.y * INBEPRcount,playerEntity.getZ() + vector.z * INBEPRcount);
+                isNotBeamEndPosReady = false;
+            }
+            if (INBEPRcount > 400) {
+                beamEndPos = new Vector3d(playerEntity.getX() + vector.x * INBEPRcount,playerEntity.getY() + vector.y * INBEPRcount,playerEntity.getZ() + vector.z * INBEPRcount);
+                isNotBeamEndPosReady = false;
+            }
+        }
+
+        boolean isNotExplodePosReady = true;
+        int INEPRCount = 0;
+        while (isNotExplodePosReady) {
+            INEPRCount++;
+            BlockPos tentativePos = new BlockPos(beamEndPos.x,superMagicCirclePos.y - INEPRCount,beamEndPos.z);
+            if (!world.isEmptyBlock(tentativePos)) {
+                explodePos = new Vector3d(beamEndPos.x,superMagicCirclePos.y - INEPRCount,beamEndPos.z);
+                isNotExplodePosReady = false;
+            }
+            if ((superMagicCirclePos.y - INEPRCount) < 1){
+                explodePos = new Vector3d(beamEndPos.x,0,beamEndPos.z);
+                isNotExplodePosReady = false;
             }
         }
 
@@ -137,25 +153,30 @@ public class MagicWandBase extends BowItem {
         if (!((double) f < 0.3D)) {
             if (!world.isClientSide) {
 
-
                 if (i < 100) {
                     magic.secondMagic();
                     System.out.println("First Magic was shot");
-                    RenderEvent.Beam beam = new RenderEvent.Beam(10,this.particlePos,this.beamEndPos,Color.blue);
-                    world.playSound(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,SoundEvents.GENERIC_EXPLODE,SoundCategory.PLAYERS, 10.0F, 20.0F);
-                    world.addParticle(ParticleTypes.EXPLOSION,beamEndPos.x,beamEndPos.y,beamEndPos.z,0,0,0);
+                    RenderEvent.Beam beam = new RenderEvent.Beam(10,this.particlePos,this.beamEndPos,Color.black);
+                    world.playSound(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,SoundEvents.GENERIC_EXPLODE,SoundCategory.PLAYERS, 5.0F, 5.0F);
+                    world.explode(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,f / 2, Explosion.Mode.BREAK);
+
                 } else if (i < 200) {
                     magic.thirdMagic();
                     System.out.println("Second Magic was shot");
                     beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
-                    RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.blue);
+                    RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
+                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,f, Explosion.Mode.BREAK);
+
+
                 } else {
                     magic.fourthMagic(superMagicCirclePos);
                     System.out.println("Third Magic was shot");
                     beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
-                    RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.blue);
+                    RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
+                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,f * 2, Explosion.Mode.BREAK);
                 }
                 System.out.println("Count(second):" + i);
+                System.out.println("ExplodePos : " + explodePos);
 
             }
 
@@ -172,6 +193,10 @@ public class MagicWandBase extends BowItem {
         particles.clear();
         superParticles.clear();
         timesList.clear();
+    }
+
+    public void summonExplodeParticles() {
+
     }
 
     public void summonParticle(World world,PlayerEntity playerEntity, Vector3d particlePos,Hand hand){
