@@ -1,7 +1,6 @@
 package jp.kps8x9.m2.magicmod.particle.particles;
 
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import jp.kps8x9.m2.magicmod.MagicMod;
 import jp.kps8x9.m2.magicmod.particle.particle_data.SuperMagicParticleData;
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleRenderType;

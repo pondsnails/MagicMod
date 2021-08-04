@@ -24,8 +24,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -15,6 +15,5 @@ public class ParticleFactoryInit {
     public static void onParticleFactoryRegistration(ParticleFactoryRegisterEvent event) {
         Minecraft.getInstance().particleEngine.register(ParticleInit.magicParticle.get(), (sprite) -> new MagicParticleFactory(sprite));
         Minecraft.getInstance().particleEngine.register(ParticleInit.superMagicParticle.get(), (sprite) -> new SuperMagicParticleFactory(sprite));
-        Minecraft.getInstance().particleEngine.register(ParticleInit.beamParticle.get(), (sprite) -> new BeamParticleFactory(sprite));
     }
 }
