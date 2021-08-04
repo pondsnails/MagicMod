@@ -7,7 +7,6 @@ import jp.kps8x9.m2.magicmod.particle.particle_data.MagicParticleData;
 import jp.kps8x9.m2.magicmod.particle.particle_data.SuperMagicParticleData;
 import jp.kps8x9.m2.magicmod.particle.particles.MagicParticle;
 import jp.kps8x9.m2.magicmod.particle.particles.SuperMagicParticle;
-import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +20,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -48,7 +46,7 @@ public class MagicWandBase extends BowItem {
     public MagicWandBase(Properties properties) {
         super(properties);
         times = 0;
-        timesList = new ArrayList<Integer>();
+        timesList = new ArrayList<>();
         superMagicCircleCount = 0;
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
@@ -103,16 +101,12 @@ public class MagicWandBase extends BowItem {
             }
         }
 
-        MagicParticleData magicParticleData = new MagicParticleData(0, 0, 0, 100, 5);
-
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (particles != null) {
             particles.remove();
-            particles = summonMagicParticle(particlePos);
-        } else {
-            particles = summonMagicParticle(particlePos);
         }
+        particles = summonMagicParticle(particlePos);
 
         particles.setPlayerEntity(playerEntity);
         particles.setKeepAlive(true);
@@ -177,21 +171,12 @@ public class MagicWandBase extends BowItem {
         }
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
-//        for (int q = 0; q < particles.size(); q++) {
-//            particles.get(q).setMagicReleased(true);
-//        }
         if (particles != null) {
             particles.setMagicReleased(true);
         }
-//        for (int r = 0; r < superParticles.size(); r++) {
-//            superParticles.get(r).setMagicReleased(true);
-//        }
         if (superParticles != null) {
             superParticles.setMagicReleased(true);
         }
-//
-//        particles.clear();
-//        superParticles.clear();
         timesList.clear();
     }
 
@@ -209,9 +194,6 @@ public class MagicWandBase extends BowItem {
                     if (superMagicCircleCount > 20000) {
 
                         if (timerBool.getBoolean(1)) {
-//                            for (int r = 0; r < superParticles.size(); r++) {
-//                                superParticles.get(r).increaseSize();
-//                            }
                             superParticles.increaseSize();
 
                             timerBool.set(1,false);
@@ -219,22 +201,13 @@ public class MagicWandBase extends BowItem {
                     } else if (superMagicCircleCount > 10000) {
 
                         if (timerBool.getBoolean(0)) {
-//                            superParticles.add(summonSuperMagicParticle(superMagicCirclePos));
                             if (superParticles != null) {
                                 superParticles.remove();
-                                superParticles = summonSuperMagicParticle(superMagicCirclePos);
-                            } else {
-                                superParticles = summonSuperMagicParticle(superMagicCirclePos);
                             }
+                            superParticles = summonSuperMagicParticle(superMagicCirclePos);
 
                             timerBool.set(0,false);
-
-//                            for (int q = 0; q < particles.size(); q++) {
-//                                particles.get(q).setMagicReleased(true);
-//                            }
                             particles.setMagicReleased(true);
-
-//                            particles.clear();
                         }
                     } else {
                         world.addParticle(particleType, particlePos.x, particlePos.y, particlePos.z, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
@@ -251,12 +224,10 @@ public class MagicWandBase extends BowItem {
                     }
                 }
             }, 0, 1);
-            return;
     }
 
     public static float getPowerForTime(int count) {
-        int power = count / 2;
-        return power;
+        return count / 2;
     }
 
     @Override
