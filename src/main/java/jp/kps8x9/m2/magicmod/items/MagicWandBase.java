@@ -139,35 +139,32 @@ public class MagicWandBase extends BowItem {
         MagicBase magic = new MagicBase(playerEntity, world, itemStack);
         magic.setAttackPoint(f);
 
-        if (!((double) f < 0.3D)) {
-            if (!world.isClientSide) {
+        if (!world.isClientSide) {
 
-                if (i < 100) {
-                    magic.secondMagic();
-                    System.out.println("First Magic was shot");
-                    RenderEvent.Beam beam = new RenderEvent.Beam(10,this.particlePos,this.beamEndPos,Color.black);
-                    world.playSound(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,SoundEvents.GENERIC_EXPLODE,SoundCategory.PLAYERS, 5.0F, 5.0F);
-                    world.explode(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,20.0F, Explosion.Mode.BREAK);
+            if (i < 100) {
+                magic.secondMagic();
+                System.out.println("First Magic was shot");
+                RenderEvent.Beam beam = new RenderEvent.Beam(10,this.particlePos,this.beamEndPos,Color.black);
+                world.playSound(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,SoundEvents.GENERIC_EXPLODE,SoundCategory.PLAYERS, 5.0F, 5.0F);
+                world.explode(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,20.0F, Explosion.Mode.BREAK);
 
-                } else if (i < 200) {
-                    magic.thirdMagic();
-                    System.out.println("Second Magic was shot");
-                    beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
-                    RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
-                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
+            } else if (i < 200) {
+                magic.thirdMagic();
+                System.out.println("Second Magic was shot");
+                beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
+                RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
+                world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
 
 
-                } else {
-                    magic.fourthMagic(superMagicCirclePos);
-                    System.out.println("Third Magic was shot");
-                    beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
-                    RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
-                    world.explode(null,explodePos.x,explodePos.y,explodePos.z,320.0F, Explosion.Mode.BREAK);
-                }
-                System.out.println("Count(second):" + i);
-                System.out.println("ExplodePos : " + explodePos);
-
+            } else {
+                magic.fourthMagic(superMagicCirclePos);
+                System.out.println("Third Magic was shot");
+                beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
+                RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
+                world.explode(null,explodePos.x,explodePos.y,explodePos.z,1280.0F, Explosion.Mode.BREAK);
             }
+            System.out.println("Count(second):" + i);
+            System.out.println("ExplodePos : " + explodePos);
 
         }
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
@@ -205,6 +202,7 @@ public class MagicWandBase extends BowItem {
                             if (superParticles != null) {
                                 superParticles.setMagicReleased(true);
                                 superParticles.remove();
+                                System.out.println(superParticles);
                                 System.out.println("SuperMagicParticle has been removed");
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
