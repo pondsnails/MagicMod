@@ -144,5 +144,10 @@
 
     Beamクラスを作り、魔法を撃った際にRenderWorldLastEventを用い、線を描画する。
 
-2021/07/27
+2021/08/03
 
+    爆発のエフェクトを追加した。
+
+2021/08/04
+
+    particles,superMagicParticles両方をリストではなくした。その代わりに新たなMagicParticleを召喚するたびに以前までのMagicParticleを削除するように変更した。
