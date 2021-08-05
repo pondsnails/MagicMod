@@ -31,6 +31,7 @@ import java.util.TimerTask;
 
 public class MagicWandBase extends BowItem {
     boolean isUsing;
+    boolean INBEPRBool;
     BasicParticleType particleType = ParticleTypes.ENCHANT;
     Vector3d particlePos;
     MagicParticle particles;
@@ -44,6 +45,7 @@ public class MagicWandBase extends BowItem {
     public MagicWandBase(Properties properties) {
         super(properties);
         particleCount = 0;
+        INBEPRBool = false;
         //timerBoolはsummonParticleの際に行われる処理の終了確認の為のフィールドであってリストである必要はない。
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
@@ -53,19 +55,12 @@ public class MagicWandBase extends BowItem {
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         float mahoujinDistance = 3.0f;
+        float superMagicDistance = 70f;
         particleCount = 0;
 
         isUsing = true;
 
         Vector3d vector = playerEntity.getLookAngle();
-
-        float superMagicDistance = 70f;
-        float superMagicX = (float) (playerEntity.getX() + vector.x * superMagicDistance);
-        float superMagicZ = (float) (playerEntity.getZ() + vector.z * superMagicDistance);
-
-        superMagicCirclePos = new Vector3d(superMagicX,playerEntity.getY() + 70,superMagicZ);
-
-        particlePos = new Vector3d(playerEntity.getX() + vector.x*mahoujinDistance,playerEntity.getY() + playerEntity.getEyeHeight() + vector.y*mahoujinDistance,playerEntity.getZ() + vector.z*mahoujinDistance);
 
         //Beamの終了地点の計算
         boolean isNotBeamEndPosReady = true;
@@ -78,10 +73,33 @@ public class MagicWandBase extends BowItem {
                 beamEndPos = new Vector3d(playerEntity.getX() + vector.x * INBEPRcount,playerEntity.getY() + vector.y * INBEPRcount,playerEntity.getZ() + vector.z * INBEPRcount);
                 isNotBeamEndPosReady = false;
             }
+
             if (INBEPRcount > 400) {
                 beamEndPos = new Vector3d(playerEntity.getX() + vector.x * INBEPRcount,playerEntity.getY() + vector.y * INBEPRcount,playerEntity.getZ() + vector.z * INBEPRcount);
                 isNotBeamEndPosReady = false;
             }
+
+            if (INBEPRcount > superMagicDistance && INBEPRBool == false) {
+                INBEPRBool = true;
+            }
+        }
+
+        float superMagicX;
+        float superMagicZ;
+        if (INBEPRBool) {
+            superMagicX = (float) beamEndPos.x;
+            superMagicZ = (float) beamEndPos.z;
+        } else {
+            superMagicX = (float) (playerEntity.getX() + vector.x * superMagicDistance);
+            superMagicZ = (float) (playerEntity.getZ() + vector.z * superMagicDistance);
+        }
+        superMagicCirclePos = new Vector3d(superMagicX,playerEntity.getY() + 70,superMagicZ);
+
+        particlePos = new Vector3d(playerEntity.getX() + vector.x*mahoujinDistance,playerEntity.getY() + playerEntity.getEyeHeight() + vector.y*mahoujinDistance,playerEntity.getZ() + vector.z*mahoujinDistance);
+
+
+        if (INBEPRcount > superMagicDistance) {
+            INBEPRBool = true;
         }
 
         //Beamの爆発地点の計算
@@ -103,7 +121,6 @@ public class MagicWandBase extends BowItem {
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (particles != null) {
-            particles.setMagicReleased(true);
             particles.remove();
         }
         particles = summonMagicParticle(particlePos);
@@ -113,7 +130,7 @@ public class MagicWandBase extends BowItem {
 
         String message = particles.toString();
 
-        playerEntity.sendMessage(new StringTextComponent(message),playerEntity.getUUID());
+        System.out.println(message);
 
         summonParticle(world, playerEntity, particlePos, hand);
 
@@ -158,7 +175,7 @@ public class MagicWandBase extends BowItem {
                 System.out.println("Second Magic was shot");
                 beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
                 RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
-                world.explode(null,explodePos.x,explodePos.y,explodePos.z,50.0F, Explosion.Mode.BREAK);
+                world.explode(null,explodePos.x,explodePos.y,explodePos.z,40.0F, Explosion.Mode.BREAK);
 
 
             } else {
@@ -208,13 +225,14 @@ public class MagicWandBase extends BowItem {
                         if (timerBool.getBoolean(0)) {
                             System.out.println("SMCCount : " + particleCount);
                             if (superParticles != null) {
-                                superParticles.setMagicReleased(true);
                                 superParticles.remove();
-                                System.out.println("SuperMagicParticle has been removed");
                             }
-                            System.out.println(superParticles);
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
-                            System.out.println("Summon SuperMagicParticle");
+                            superParticles.setKeepAlive(true);
+
+                            String message = superParticles.toString();
+
+                            playerEntity.sendMessage(new StringTextComponent(message),playerEntity.getUUID());
 
                             timerBool.set(0,false);
                             particles.setMagicReleased(true);

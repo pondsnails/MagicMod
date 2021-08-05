@@ -80,7 +80,7 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         this.bCol = data.getB();
         this.quadSize = (float) (0.75 * data.getScale());
         int i = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
-        this.lifetime = (int) Math.max((float) i * data.getScale(), 1.0F);
+        this.lifetime = data.getLifeTime();
         this.initialized = false;
         this.increased = false;
         this.setSpriteFromAge(sprite);
@@ -105,14 +105,12 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
 
         count++;
         if (waving) {
-//            System.out.println("Now, increased value is true.");
             if (count % 500 < 250) {
                 n += 0.0001;
             } else {
                 n -= 0.0001;
             }
         } else {
-//            System.out.println("Now, increased value is false.");
             if (count % 50 < 25) {
                 n += 0.001;
             } else {
