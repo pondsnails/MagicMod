@@ -20,13 +20,12 @@ public class MagicBase {
         this.itemStack = itemStack;
     }
 
+    //現在、属性のクラスを制作するまでに至っていないのでここはまだ作っていない。
     public void firstMagic() {}
 
     public void secondMagic() {}
 
-    public void thirdMagic() {}
-
-    public void fourthMagic(Vector3d pos) {
+    public void thirdMagic(Vector3d pos) {
         Timer timer = new Timer();
 
         timer.scheduleAtFixedRate(new TimerTask() {
