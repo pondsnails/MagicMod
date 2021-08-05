@@ -178,6 +178,7 @@ public class MagicWandBase extends BowItem {
                 beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
                 RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
                 world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
+
             }
 
         }
