@@ -161,11 +161,8 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         this.lifetime = lifetime;
     }
 
-    public void setKeepAlive(boolean keepAlive,boolean willDisplay) {
+    public void setKeepAlive(boolean keepAlive) {
         this.keepAlive = keepAlive;
-        if (willDisplay) {
-            this.willDisplay = true;
-        }
     }
 
     public void setWillDisplay(boolean willDisplay) {

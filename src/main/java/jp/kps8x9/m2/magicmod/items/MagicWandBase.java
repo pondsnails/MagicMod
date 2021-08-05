@@ -228,12 +228,11 @@ public class MagicWandBase extends BowItem {
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
 
-                            timerBool.set(0,false);
                             particles.setMagicReleased(true);
+
+                            superParticles.setKeepAlive(true);
+                            timerBool.set(0,false);
                         } else {
-                            if (superParticles != null) {
-                                superParticles.setKeepAlive(true,true);
-                            }
                         }
                     }
                     //それ以外
