@@ -2,7 +2,7 @@ package jp.kps8x9.m2.magicmod.items;
 
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import jp.kps8x9.m2.magicmod.events.RenderEvent;
-import jp.kps8x9.m2.magicmod.magic.MagicBase;
+import jp.kps8x9.m2.magicmod.magic.magics.MagicBase;
 import jp.kps8x9.m2.magicmod.particle.particle_data.MagicParticleData;
 import jp.kps8x9.m2.magicmod.particle.particle_data.SuperMagicParticleData;
 import jp.kps8x9.m2.magicmod.particle.particles.MagicParticle;
@@ -36,11 +36,13 @@ public class MagicWandBase extends BowItem {
     Vector3d beamEndPos;
     Vector3d explodePos;
     int particleCount;
+    MagicBase magic;
 
     public MagicWandBase(Properties properties) {
         super(properties);
         particleCount = 0;
         INBEPRBool = false;
+        magic = new MagicBase();
         //timerBoolはsummonParticleの際に行われる処理の終了確認の為のフィールドであってリストである必要はない。
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
@@ -153,7 +155,6 @@ public class MagicWandBase extends BowItem {
         System.out.println("Time : " + time);
         float f = getPowerForTime(i);
 
-        MagicBase magic = new MagicBase(playerEntity, world, itemStack);
         magic.setAttackPoint(f);
 
         if (!world.isClientSide) {

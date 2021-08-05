@@ -1,4 +1,4 @@
-package jp.kps8x9.m2.magicmod.magic;
+package jp.kps8x9.m2.magicmod.magic.magics;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -10,20 +10,17 @@ import java.util.TimerTask;
 
 public class MagicBase {
     private float attackPoint;
-    private PlayerEntity playerEntity;
-    private World world;
-    private ItemStack itemStack;
 
-    public MagicBase(PlayerEntity playerEntity, World world, ItemStack itemStack) {
-        this.playerEntity = playerEntity;
-        this.world = world;
-        this.itemStack = itemStack;
-    }
+    public MagicBase() {}
 
     //現在、属性のクラスを制作するまでに至っていないのでここはまだ作っていない。
-    public void firstMagic() {}
+    public void firstMagic() {
 
-    public void secondMagic() {}
+    }
+
+    public void secondMagic() {
+
+    }
 
     public void thirdMagic(Vector3d pos) {
         Timer timer = new Timer();
