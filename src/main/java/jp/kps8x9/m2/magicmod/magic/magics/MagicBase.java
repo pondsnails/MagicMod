@@ -9,30 +9,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MagicBase {
-    private float attackPoint;
-
     public MagicBase() {}
 
     //現在、属性のクラスを制作するまでに至っていないのでここはまだ作っていない。
-    public void firstMagic() {
+    public void firstMagic(Vector3d point,float diameter) {
 
     }
 
-    public void secondMagic() {
+    public void secondMagic(Vector3d point,float diameter) {
 
     }
 
-    public void thirdMagic(Vector3d pos) {
-        Timer timer = new Timer();
+    public void thirdMagic(Vector3d point,float diameter) {
 
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-            }
-        }, 0, 1);
-    }
-
-    public void setAttackPoint(float attackPoint) {
-        this.attackPoint = attackPoint;
     }
 }
