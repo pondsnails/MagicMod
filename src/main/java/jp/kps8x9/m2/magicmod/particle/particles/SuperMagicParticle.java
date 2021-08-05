@@ -18,18 +18,14 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
     private final IAnimatedSprite sprites;
     private boolean initialized;
     private Quaternion firstQuaternion;
-    private float i;
-    private float j;
-    private float k;
-    private float r;
     protected float n;
     protected boolean sized;
     protected boolean isMagicReleased;
-    protected int m;
     protected boolean increased;
     protected int count;
     boolean waving = false;
     protected boolean keepAlive;
+    protected boolean willDisplay;
 
     @Override
     public void render(IVertexBuilder vertexBuilder, ActiveRenderInfo renderInfo, float floatValue) {
@@ -37,7 +33,6 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         float f = (float)(MathHelper.lerp(floatValue, this.xo, this.x) - vector3d.x());
         float f1 = (float)(MathHelper.lerp(floatValue, this.yo, this.y) - vector3d.y());
         float f2 = (float)(MathHelper.lerp(floatValue, this.zo, this.z) - vector3d.z());
-        Quaternion quaternion;
 
         if (!initialized) {
             firstQuaternion = new Quaternion(0.5F,0.5F,-0.5F,0.5F);
@@ -63,10 +58,12 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         float f5 = this.getV0();
         float f6 = this.getV1();
         int j = this.getLightColor(floatValue);
-        vertexBuilder.vertex((double)avector3f[0].x(), (double)avector3f[0].y(), (double)avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        vertexBuilder.vertex((double)avector3f[1].x(), (double)avector3f[1].y(), (double)avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        vertexBuilder.vertex((double)avector3f[2].x(), (double)avector3f[2].y(), (double)avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        vertexBuilder.vertex((double)avector3f[3].x(), (double)avector3f[3].y(), (double)avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        if (willDisplay) {
+            vertexBuilder.vertex((double)avector3f[0].x(), (double)avector3f[0].y(), (double)avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+            vertexBuilder.vertex((double)avector3f[1].x(), (double)avector3f[1].y(), (double)avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+            vertexBuilder.vertex((double)avector3f[2].x(), (double)avector3f[2].y(), (double)avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+            vertexBuilder.vertex((double)avector3f[3].x(), (double)avector3f[3].y(), (double)avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        }
     }
 
     public SuperMagicParticle(ClientWorld world, double v1, double v2, double v3, double v4, double v5, double v6, SuperMagicParticleData data, IAnimatedSprite sprite) {
@@ -88,6 +85,7 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         this.sized = true;
         this.count = 0;
         this.keepAlive = false;
+        this.willDisplay = true;
     }
 
     @Override
@@ -163,8 +161,15 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         this.lifetime = lifetime;
     }
 
-    public void setKeepAlive(boolean keepAlive) {
+    public void setKeepAlive(boolean keepAlive,boolean willDisplay) {
         this.keepAlive = keepAlive;
+        if (willDisplay) {
+            this.willDisplay = true;
+        }
+    }
+
+    public void setWillDisplay(boolean willDisplay) {
+        this.willDisplay = willDisplay;
     }
 
     @Override

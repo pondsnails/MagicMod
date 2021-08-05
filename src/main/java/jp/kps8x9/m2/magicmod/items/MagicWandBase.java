@@ -232,7 +232,7 @@ public class MagicWandBase extends BowItem {
                             particles.setMagicReleased(true);
                         } else {
                             if (superParticles != null) {
-                                superParticles.setKeepAlive(true);
+                                superParticles.setKeepAlive(true,true);
                             }
                         }
                     }
