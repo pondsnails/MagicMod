@@ -1,4 +1,6 @@
 package jp.kps8x9.m2.magicmod.magic.magics;
 
-public class WindMagic {
+import jp.kps8x9.m2.magicmod.magic.attribution.WindAttribution;
+
+public class WindMagic extends MagicBase implements WindAttribution {
 }

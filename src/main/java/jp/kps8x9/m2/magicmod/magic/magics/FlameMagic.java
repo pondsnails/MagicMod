@@ -1,4 +1,6 @@
 package jp.kps8x9.m2.magicmod.magic.magics;
 
-public class FlameMagic {
+import jp.kps8x9.m2.magicmod.magic.attribution.FlameAttribution;
+
+public class FlameMagic extends MagicBase implements FlameAttribution {
 }
