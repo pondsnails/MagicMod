@@ -14,16 +14,18 @@ import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -108,6 +110,10 @@ public class MagicWandBase extends BowItem {
 
         particles.setPlayerEntity(playerEntity);
         particles.setKeepAlive(true);
+
+        String message = particles.toString();
+
+        playerEntity.sendMessage(new StringTextComponent(message),playerEntity.getUUID());
 
         summonParticle(world, playerEntity, particlePos, hand);
 
