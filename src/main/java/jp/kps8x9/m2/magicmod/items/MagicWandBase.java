@@ -177,7 +177,6 @@ public class MagicWandBase extends BowItem {
                 RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
                 world.explode(null,explodePos.x,explodePos.y,explodePos.z,40.0F, Explosion.Mode.BREAK);
 
-
             } else {
                 magic.fourthMagic(superMagicCirclePos);
                 System.out.println("Third Magic was shot");
@@ -228,10 +227,13 @@ public class MagicWandBase extends BowItem {
                                 superParticles.remove();
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
-                            superParticles.setKeepAlive(true);
 
                             timerBool.set(0,false);
                             particles.setMagicReleased(true);
+                        } else {
+                            if (superParticles != null) {
+                                superParticles.setKeepAlive(true);
+                            }
                         }
                     }
                     //それ以外
