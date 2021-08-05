@@ -230,10 +230,6 @@ public class MagicWandBase extends BowItem {
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
                             superParticles.setKeepAlive(true);
 
-                            String message = superParticles.toString();
-
-                            playerEntity.sendMessage(new StringTextComponent(message),playerEntity.getUUID());
-
                             timerBool.set(0,false);
                             particles.setMagicReleased(true);
                         }
