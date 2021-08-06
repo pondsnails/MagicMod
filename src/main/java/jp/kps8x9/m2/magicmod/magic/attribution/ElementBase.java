@@ -1,6 +1,6 @@
 package jp.kps8x9.m2.magicmod.magic.attribution;
 
-public interface AttributionBase {
+public interface ElementBase {
 
     int additionalDamage = 0;
 

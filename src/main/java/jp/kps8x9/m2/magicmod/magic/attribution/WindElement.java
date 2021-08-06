@@ -4,13 +4,13 @@ import net.minecraft.util.math.vector.Vector3d;
 
 import java.awt.*;
 
-public interface GroundAttribution extends AttributionBase{
-    Color DarkBrown = new Color(111,75,62);
-    Color LightBrown = new Color(197,149,107);
+public interface WindElement extends ElementBase {
+    Color DarkWind = new Color(105,176,118);
+    Color LightWind = new Color(224,255,224);
 
     int additionalDamage = 2;
 
-    default void sideEffect(Vector3d growingPos,float diameter) {
+    default void sideEffect(Vector3d windPos,float power) {
 
     }
 

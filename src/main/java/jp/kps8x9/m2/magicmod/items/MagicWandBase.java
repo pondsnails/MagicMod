@@ -154,29 +154,21 @@ public class MagicWandBase extends BowItem {
         int i = useDuration - count;
         int time = this.particleCount;
         float f = getPowerForTime(i);
+        this.magic.setField(world,particlePos,beamEndPos,explodePos,superMagicCirclePos);
 
         if (!world.isClientSide) {
 
             if (time < 10000) {
                 magic.firstMagic(beamEndPos,5);
                 System.out.println("First Magic was shot");
-                RenderEvent.Beam beam = new RenderEvent.Beam(10,this.particlePos,this.beamEndPos,Color.black);
-                world.playSound(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,SoundEvents.GENERIC_EXPLODE,SoundCategory.PLAYERS, 5.0F, 5.0F);
-                world.explode(null,beamEndPos.x,beamEndPos.y,beamEndPos.z,20.0F, Explosion.Mode.BREAK);
 
             } else if (time < 20000) {
                 magic.secondMagic(explodePos,10);
                 System.out.println("Second Magic was shot");
-                beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
-                RenderEvent.Beam beam = new RenderEvent.Beam(20, this.superMagicCirclePos,beamEndPos,Color.black);
-                world.explode(null,explodePos.x,explodePos.y,explodePos.z,40.0F, Explosion.Mode.BREAK);
 
             } else {
                 magic.thirdMagic(explodePos,20);
                 System.out.println("Third Magic was shot");
-                beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
-                RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,Color.black);
-                world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
 
             }
 

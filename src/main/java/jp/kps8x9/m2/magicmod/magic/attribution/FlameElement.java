@@ -4,13 +4,13 @@ import net.minecraft.util.math.vector.Vector3d;
 
 import java.awt.*;
 
-public interface WindAttribution extends AttributionBase{
-    Color DarkWind = new Color(105,176,118);
-    Color LightWind = new Color(224,255,224);
+public interface FlameElement extends ElementBase {
+    Color DarkRed = new Color(102,0,0);
+    Color LightRed = new Color(250,219,218);
 
     int additionalDamage = 2;
 
-    default void sideEffect(Vector3d windPos,float power) {
+    default void sideEffect(Vector3d burningPosition, float diameter) {
 
     }
 

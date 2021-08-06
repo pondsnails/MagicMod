@@ -4,13 +4,13 @@ import net.minecraft.util.math.vector.Vector3d;
 
 import java.awt.*;
 
-public interface FlameAttribution extends AttributionBase{
-    Color DarkRed = new Color(102,0,0);
-    Color LightRed = new Color(250,219,218);
+public interface GroundElement extends ElementBase {
+    Color DarkBrown = new Color(111,75,62);
+    Color LightBrown = new Color(197,149,107);
 
     int additionalDamage = 2;
 
-    default void sideEffect(Vector3d burningPosition, float diameter) {
+    default void sideEffect(Vector3d growingPos,float diameter) {
 
     }
 

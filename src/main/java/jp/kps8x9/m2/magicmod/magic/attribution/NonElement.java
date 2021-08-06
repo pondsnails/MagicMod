@@ -2,7 +2,7 @@ package jp.kps8x9.m2.magicmod.magic.attribution;
 
 import java.awt.*;
 
-public interface VoidAttribution extends AttributionBase{
+public interface NonElement extends ElementBase {
     Color DarkPurple = new Color(35,0,19);
     Color LightPurple = new Color(235,179,255);
 
@@ -16,5 +16,13 @@ public interface VoidAttribution extends AttributionBase{
     @Override
     default int getAdditionalDamage() {
         return this.additionalDamage;
+    }
+
+    default Color getDarkColor() {
+        return DarkPurple;
+    }
+
+    default Color getLightColor() {
+        return LightPurple;
     }
 }
