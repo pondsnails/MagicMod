@@ -17,16 +17,15 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MagicWandBase extends BowItem {
     boolean isUsing;
     boolean INBEPRBool;
+    boolean processed;
     BasicParticleType particleType = ParticleTypes.ENCHANT;
     Vector3d particlePos;
     MagicParticle particles;
@@ -42,6 +41,7 @@ public class MagicWandBase extends BowItem {
         super(properties);
         particleCount = 0;
         INBEPRBool = false;
+        processed = true;
         magic = new MagicBase();
         //timerBoolはsummonParticleの際に行われる処理の終了確認の為のフィールドであってリストである必要はない。
         timerBool = new BooleanArrayList();
@@ -51,6 +51,7 @@ public class MagicWandBase extends BowItem {
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+
         float magicCircleDistance = 3.0f;
         float superMagicDistance = 70f;
         particleCount = 0;
@@ -117,14 +118,17 @@ public class MagicWandBase extends BowItem {
 
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-        if (particles != null) {
+        if (particles instanceof MagicParticle) {
+            System.out.println("Particles : " + particles);
             particles.remove();
         }
         particles = summonMagicParticle(particlePos);
 
-        particles.setPlayerEntity(playerEntity);
-        particles.setKeepAlive(true);
-        particles.setWillDisplay(true);
+        if (particles instanceof MagicParticle) {
+            particles.setPlayerEntity(playerEntity);
+            particles.setKeepAlive(true);
+            particles.setWillDisplay(true);
+        }
 
         String message = particles.toString();
 
@@ -175,13 +179,12 @@ public class MagicWandBase extends BowItem {
         }
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
-        if (particles != null) {
+        if (particles instanceof MagicParticle) {
             particles.setMagicReleased(true);
-            particles = null;
         }
-        if (superParticles != null) {
+
+        if (superParticles instanceof SuperMagicParticle) {
             superParticles.setMagicReleased(true);
-            superParticles = null;
         }
     }
 
@@ -201,7 +204,7 @@ public class MagicWandBase extends BowItem {
                     if (particleCount > 20000) {
 
                         if (timerBool.getBoolean(1)) {
-                            if (superParticles != null) {
+                            if (superParticles instanceof SuperMagicParticle) {
                                 superParticles.increaseSize();
                             }
 
@@ -213,19 +216,19 @@ public class MagicWandBase extends BowItem {
 
                         if (timerBool.getBoolean(0)) {
                             timerBool.set(0,false);
-                            if (superParticles != null) {
+                            if (superParticles instanceof SuperMagicParticle) {
                                 superParticles.remove();
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
 
-                            if (particles != null) {
+                            if (particles instanceof MagicParticle) {
                                 particles.setMagicReleased(true);
                             }
 
                             System.out.println(superParticles);
 
                         } else {
-                            if (superParticles != null) {
+                            if (superParticles instanceof SuperMagicParticle) {
                                 superParticles.setWillDisplay(true);
                                 superParticles.setKeepAlive(true);
                             }
