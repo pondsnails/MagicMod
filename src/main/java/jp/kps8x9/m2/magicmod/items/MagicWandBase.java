@@ -51,7 +51,7 @@ public class MagicWandBase extends BowItem {
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
-        float mahoujinDistance = 3.0f;
+        float magicCircleDistance = 3.0f;
         float superMagicDistance = 70f;
         particleCount = 0;
 
@@ -92,7 +92,7 @@ public class MagicWandBase extends BowItem {
         }
         superMagicCirclePos = new Vector3d(superMagicX,playerEntity.getY() + 70,superMagicZ);
 
-        particlePos = new Vector3d(playerEntity.getX() + vector.x*mahoujinDistance,playerEntity.getY() + playerEntity.getEyeHeight() + vector.y*mahoujinDistance,playerEntity.getZ() + vector.z*mahoujinDistance);
+        particlePos = new Vector3d(playerEntity.getX() + vector.x*magicCircleDistance,playerEntity.getY() + playerEntity.getEyeHeight() + vector.y*magicCircleDistance,playerEntity.getZ() + vector.z*magicCircleDistance);
 
 
         if (INBEPRcount > superMagicDistance) {
@@ -131,7 +131,7 @@ public class MagicWandBase extends BowItem {
 
         summonParticle(world, playerEntity, particlePos, hand);
 
-        playerEntity.getCooldowns().addCooldown(this, 5 * 20);
+        playerEntity.getCooldowns().addCooldown(this, 1 * 20);
 
         return super.use(world, playerEntity, hand);
     }
@@ -152,7 +152,6 @@ public class MagicWandBase extends BowItem {
 
         int i = useDuration - count;
         int time = this.particleCount;
-        System.out.println("Time : " + time);
         float f = getPowerForTime(i);
 
         if (!world.isClientSide) {
@@ -185,9 +184,11 @@ public class MagicWandBase extends BowItem {
 
         if (particles != null) {
             particles.setMagicReleased(true);
+            particles = null;
         }
         if (superParticles != null) {
             superParticles.setMagicReleased(true);
+            superParticles = null;
         }
     }
 
@@ -207,8 +208,9 @@ public class MagicWandBase extends BowItem {
                     if (particleCount > 20000) {
 
                         if (timerBool.getBoolean(1)) {
-                            System.out.println("SMCCount : " + particleCount);
-                            superParticles.increaseSize();
+                            if (superParticles != null) {
+                                superParticles.increaseSize();
+                            }
 
                             timerBool.set(1,false);
                         }
@@ -217,17 +219,23 @@ public class MagicWandBase extends BowItem {
                     else if (particleCount > 10000) {
 
                         if (timerBool.getBoolean(0)) {
-                            System.out.println("SMCCount : " + particleCount);
+                            timerBool.set(0,false);
                             if (superParticles != null) {
                                 superParticles.remove();
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
 
-                            particles.setMagicReleased(true);
+                            if (particles != null) {
+                                particles.setMagicReleased(true);
+                            }
 
-                            superParticles.setKeepAlive(true);
-                            timerBool.set(0,false);
+                            System.out.println(superParticles);
+
                         } else {
+                            if (superParticles != null) {
+                                superParticles.setWillDisplay(true);
+                                superParticles.setKeepAlive(true);
+                            }
                         }
                     }
                     //それ以外

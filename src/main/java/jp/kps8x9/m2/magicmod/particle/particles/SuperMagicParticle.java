@@ -85,7 +85,7 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         this.sized = true;
         this.count = 0;
         this.keepAlive = false;
-        this.willDisplay = true;
+        this.willDisplay = false;
     }
 
     @Override

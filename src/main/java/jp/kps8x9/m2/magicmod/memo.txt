@@ -8,7 +8,7 @@ tips:
     RenderSystem.disableCull()を用いることにより、Particleの両面にテクスチャを反映させることができる
 
 
-//        float mahoujinDistance = 3.0f;
+//        float magicCircleDistance = 3.0f;
 //        float mahoujinXDistance = 3.0F;
 //        float particleXPos;
 //        float particleYPos;
@@ -33,11 +33,11 @@ tips:
 //
 //
 //        if (playerFacedXDegree < -15) {
-//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * mahoujinDistance + 1.5F);
+//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * magicCircleDistance + 1.5F);
 //        } else if (playerFacedXDegree < 40) {
-//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * mahoujinDistance + 1.0F);
+//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * magicCircleDistance + 1.0F);
 //        } else {
-//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * mahoujinDistance + 0.5F);
+//            particleYPos = (float) (playerEntity.getY() - Math.sin(playerFacedXRadian) * magicCircleDistance + 0.5F);
 //        }
 //
 //        particleXPos = (float) (playerEntity.getX() - Math.sin(playerFacedYRadian) * Math.abs(Math.cos(playerFacedXRadian)) * mahoujinXDistance);
