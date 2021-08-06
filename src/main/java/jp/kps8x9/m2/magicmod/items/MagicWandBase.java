@@ -55,9 +55,11 @@ public class MagicWandBase extends BowItem {
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         if (particles instanceof MagicParticle) {
             particles.remove();
+            particles = null;
         }
         if (superParticles instanceof SuperMagicParticle) {
             superParticles.remove();
+            superParticles = null;
         }
 
         float magicCircleDistance = 3.0f;
@@ -220,8 +222,9 @@ public class MagicWandBase extends BowItem {
 
                         if (timerBool.getBoolean(0)) {
                             timerBool.set(0,false);
-                            if (superParticles instanceof SuperMagicParticle) {
+                            if (superParticles instanceof SuperMagicParticle){
                                 superParticles.remove();
+                                superParticles = null;
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
 
