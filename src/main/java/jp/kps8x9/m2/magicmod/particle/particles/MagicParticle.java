@@ -30,6 +30,7 @@ public class MagicParticle extends SpriteTexturedParticle {
     protected int m;
     protected int count;
     protected boolean keepAlive;
+    protected boolean willDisplay;
 
     @Override
     public void render(IVertexBuilder vertexBuilder, ActiveRenderInfo renderInfo, float floatValue) {
@@ -83,10 +84,12 @@ public class MagicParticle extends SpriteTexturedParticle {
         float f5 = this.getV0();
         float f6 = this.getV1();
         int j = this.getLightColor(floatValue);
-        vertexBuilder.vertex((double)avector3f[0].x(), (double)avector3f[0].y(), (double)avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        vertexBuilder.vertex((double)avector3f[1].x(), (double)avector3f[1].y(), (double)avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        vertexBuilder.vertex((double)avector3f[2].x(), (double)avector3f[2].y(), (double)avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        vertexBuilder.vertex((double)avector3f[3].x(), (double)avector3f[3].y(), (double)avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        if (willDisplay) {
+            vertexBuilder.vertex((double)avector3f[0].x(), (double)avector3f[0].y(), (double)avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+            vertexBuilder.vertex((double)avector3f[1].x(), (double)avector3f[1].y(), (double)avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+            vertexBuilder.vertex((double)avector3f[2].x(), (double)avector3f[2].y(), (double)avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+            vertexBuilder.vertex((double)avector3f[3].x(), (double)avector3f[3].y(), (double)avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        }
     }
 
     public MagicParticle(ClientWorld world, double v1, double v2, double v3, double v4, double v5, double v6, MagicParticleData data, IAnimatedSprite sprite) {
@@ -107,6 +110,7 @@ public class MagicParticle extends SpriteTexturedParticle {
         this.i = 1;
         this.count = 0;
         this.keepAlive = false;
+        this.willDisplay = false;
     }
 
     @Override
@@ -157,6 +161,10 @@ public class MagicParticle extends SpriteTexturedParticle {
 
     public void setKeepAlive(boolean keepAlive) {
         this.keepAlive = keepAlive;
+    }
+
+    public void setWillDisplay(boolean willDisplay) {
+        this.willDisplay = willDisplay;
     }
 
     public PlayerEntity getPlayerEntity() {

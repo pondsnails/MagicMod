@@ -124,6 +124,7 @@ public class MagicWandBase extends BowItem {
 
         particles.setPlayerEntity(playerEntity);
         particles.setKeepAlive(true);
+        particles.setWillDisplay(true);
 
         String message = particles.toString();
 
