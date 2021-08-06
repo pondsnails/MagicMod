@@ -47,10 +47,18 @@ public class MagicWandBase extends BowItem {
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
         timerBool.add(1,true);
+        particles = null;
+        superParticles = null;
     }
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+        if (particles instanceof MagicParticle) {
+            particles.remove();
+        }
+        if (superParticles instanceof SuperMagicParticle) {
+            superParticles.remove();
+        }
 
         float magicCircleDistance = 3.0f;
         float superMagicDistance = 70f;
@@ -118,10 +126,6 @@ public class MagicWandBase extends BowItem {
 
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-        if (particles instanceof MagicParticle) {
-            System.out.println("Particles : " + particles);
-            particles.remove();
-        }
         particles = summonMagicParticle(particlePos);
 
         if (particles instanceof MagicParticle) {
@@ -151,6 +155,14 @@ public class MagicWandBase extends BowItem {
 
     @Override
     public void releaseUsing(ItemStack itemStack, World world, LivingEntity livingEntity, int count) {
+        if (particles instanceof MagicParticle) {
+            particles.setMagicReleased(true);
+        }
+
+        if (superParticles instanceof SuperMagicParticle) {
+            superParticles.setMagicReleased(true);
+        }
+
         isUsing = false;
         PlayerEntity playerEntity = (PlayerEntity) livingEntity;
         int useDuration = this.getUseDuration(itemStack);
@@ -178,14 +190,6 @@ public class MagicWandBase extends BowItem {
 
         }
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-
-        if (particles instanceof MagicParticle) {
-            particles.setMagicReleased(true);
-        }
-
-        if (superParticles instanceof SuperMagicParticle) {
-            superParticles.setMagicReleased(true);
-        }
     }
 
     public void summonExplodeParticles() {
