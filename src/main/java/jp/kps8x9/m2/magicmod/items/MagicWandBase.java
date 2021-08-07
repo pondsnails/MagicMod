@@ -233,12 +233,11 @@ public class MagicWandBase extends BowItem {
                             }
 
                             System.out.println(superParticles);
-
-                        } else {
                             if (superParticles instanceof SuperMagicParticle) {
                                 superParticles.setWillDisplay(true);
                                 superParticles.setKeepAlive(true);
                             }
+                        } else {
                         }
                     }
                     //それ以外

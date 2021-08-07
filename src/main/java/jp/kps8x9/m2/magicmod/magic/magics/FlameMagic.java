@@ -1,6 +1,6 @@
 package jp.kps8x9.m2.magicmod.magic.magics;
 
-import jp.kps8x9.m2.magicmod.magic.attribution.FlameElement;
+import jp.kps8x9.m2.magicmod.magic.element.FlameElement;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class FlameMagic extends MagicBase implements FlameElement {

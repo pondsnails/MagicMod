@@ -1,4 +1,4 @@
-package jp.kps8x9.m2.magicmod.magic.attribution;
+package jp.kps8x9.m2.magicmod.magic.element;
 
 import net.minecraft.util.math.vector.Vector3d;
 

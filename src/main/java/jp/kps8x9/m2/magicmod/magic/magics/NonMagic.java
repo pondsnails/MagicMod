@@ -1,7 +1,7 @@
 package jp.kps8x9.m2.magicmod.magic.magics;
 
 import jp.kps8x9.m2.magicmod.events.RenderEvent;
-import jp.kps8x9.m2.magicmod.magic.attribution.NonElement;
+import jp.kps8x9.m2.magicmod.magic.element.NonElement;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3d;

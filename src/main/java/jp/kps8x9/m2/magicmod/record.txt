@@ -165,4 +165,7 @@
     superMagicParticleの重複召喚を回避することはできなかったが、初期のlifeTimeの値を限りなく0に近づけ、参照できるsuperMagicParticleのみを表示させ、
     lifeTimeを元に戻すという作業を加えることによって同時に二個現れることはなくなった。
 
-    別のPCではParticleが現れないというものはParticleリストの削除により修正された。
+2021/08/06
+
+    ElementとMagicを修正し、それぞれの属性を実装できる準備ができた。
+
