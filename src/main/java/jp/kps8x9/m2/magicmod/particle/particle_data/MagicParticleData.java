@@ -10,7 +10,7 @@ import net.minecraft.particles.ParticleType;
 import java.util.Locale;
 
 public class MagicParticleData implements IParticleData {
-    public static final MagicParticleData NOT_REVERSED_NORMAL_LIGHT_BLUE_MAGIC_PARTICLE = new MagicParticleData(65, 191, 240, 5F, 10);
+    public static final MagicParticleData NORMAL_MAGIC_PARTICLE = new MagicParticleData(65, 191, 240, 5F, 10);
 
     public static final IDeserializer<MagicParticleData> DESERIALIZER = new IDeserializer<MagicParticleData>() {
         public MagicParticleData fromCommand(ParticleType<MagicParticleData> typeIn, StringReader reader) throws CommandSyntaxException {

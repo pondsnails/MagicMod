@@ -26,6 +26,6 @@ public class NonMagic extends MagicBase implements NonElement {
     public void thirdMagic(Vector3d point, float diameter) {
         beamEndPos = new Vector3d(superMagicCirclePos.x, 0,superMagicCirclePos.z);
         RenderEvent.Beam beam = new RenderEvent.Beam(40, this.superMagicCirclePos,beamEndPos,this.getDarkColor());
-        world.explode(null,explodePos.x,explodePos.y,explodePos.z,160.0F, Explosion.Mode.BREAK);
+        world.explode(null,explodePos.x,explodePos.y,explodePos.z,240.0F, Explosion.Mode.BREAK);
     }
 }

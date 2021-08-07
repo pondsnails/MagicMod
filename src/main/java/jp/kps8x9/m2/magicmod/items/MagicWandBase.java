@@ -43,25 +43,16 @@ public class MagicWandBase extends BowItem {
         INBEPRBool = false;
         processed = true;
         magic = new MagicBase();
-        //timerBoolはsummonParticleの際に行われる処理の終了確認の為のフィールドであってリストである必要はない。
         timerBool = new BooleanArrayList();
         timerBool.add(0,true);
         timerBool.add(1,true);
+        timerBool.add(2,true);
         particles = null;
         superParticles = null;
     }
 
     @Override
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
-        if (particles instanceof MagicParticle) {
-            particles.remove();
-            particles = null;
-        }
-        if (superParticles instanceof SuperMagicParticle) {
-            superParticles.remove();
-            superParticles = null;
-        }
-
         float magicCircleDistance = 3.0f;
         float superMagicDistance = 70f;
         particleCount = 0;
@@ -92,6 +83,7 @@ public class MagicWandBase extends BowItem {
             }
         }
 
+        //superMagicParticleの位置計算
         float superMagicX;
         float superMagicZ;
         if (INBEPRBool) {
@@ -127,28 +119,14 @@ public class MagicWandBase extends BowItem {
         }
 
         world.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SoundEvents.BEACON_ACTIVATE, SoundCategory.PLAYERS, 1.0F, 1.0F);
-
-        particles = summonMagicParticle(particlePos);
-
-        if (particles instanceof MagicParticle) {
-            particles.setPlayerEntity(playerEntity);
-            particles.setKeepAlive(true);
-            particles.setWillDisplay(true);
-        }
-
-        String message = particles.toString();
-
-        System.out.println(message);
-
         summonParticle(world, playerEntity, particlePos, hand);
-
-        playerEntity.getCooldowns().addCooldown(this, 1 * 20);
+        playerEntity.getCooldowns().addCooldown(this, (int) (0.3 * 20));
 
         return super.use(world, playerEntity, hand);
     }
 
     public MagicParticle summonMagicParticle(Vector3d particlePos) {
-        return (MagicParticle) Minecraft.getInstance().particleEngine.createParticle(MagicParticleData.NOT_REVERSED_NORMAL_LIGHT_BLUE_MAGIC_PARTICLE, particlePos.x, particlePos.y, particlePos.z, 0D, 0D, 0D);
+        return (MagicParticle) Minecraft.getInstance().particleEngine.createParticle(MagicParticleData.NORMAL_MAGIC_PARTICLE, particlePos.x, particlePos.y, particlePos.z, 0D, 0D, 0D);
     }
 
     public SuperMagicParticle summonSuperMagicParticle(Vector3d particlePos) {
@@ -157,14 +135,6 @@ public class MagicWandBase extends BowItem {
 
     @Override
     public void releaseUsing(ItemStack itemStack, World world, LivingEntity livingEntity, int count) {
-        if (particles instanceof MagicParticle) {
-            particles.setMagicReleased(true);
-        }
-
-        if (superParticles instanceof SuperMagicParticle) {
-            superParticles.setMagicReleased(true);
-        }
-
         isUsing = false;
         PlayerEntity playerEntity = (PlayerEntity) livingEntity;
         int useDuration = this.getUseDuration(itemStack);
@@ -201,30 +171,40 @@ public class MagicWandBase extends BowItem {
     public void summonParticle(World world,PlayerEntity playerEntity, Vector3d particlePos,Hand hand){
         Timer timer = new Timer();
 
-
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
 
-                    //20秒以上経過時
+                    //20秒以上経過時 superParticleを巨大化させる
                     if (particleCount > 20000) {
 
-                        if (timerBool.getBoolean(1)) {
+                        if (timerBool.getBoolean(2)) {
                             if (superParticles instanceof SuperMagicParticle) {
                                 superParticles.increaseSize();
                             }
 
-                            timerBool.set(1,false);
+                            timerBool.set(2,false);
                         }
                     }
-                    //10秒から20秒までの間
+
+                    //10秒以上経過後 superParticleを出現させる
                     else if (particleCount > 10000) {
 
-                        if (timerBool.getBoolean(0)) {
-                            timerBool.set(0,false);
+                        if (!timerBool.getBoolean(1)) {
+                            if (superParticles instanceof SuperMagicParticle) {
+                                superParticles.setWillDisplay(true);
+                                superParticles.setKeepAlive(true);
+                                superParticles.setSized(true);
+                            }
+                        }
+                    }
+                    //9.5秒以上経過後 superParticleの準備
+                    else if (particleCount > 9500) {
+
+                        if (timerBool.getBoolean(1)) {
+                            timerBool.set(1,false);
                             if (superParticles instanceof SuperMagicParticle){
                                 superParticles.remove();
-                                superParticles = null;
                             }
                             superParticles = summonSuperMagicParticle(superMagicCirclePos);
 
@@ -232,22 +212,48 @@ public class MagicWandBase extends BowItem {
                                 particles.setMagicReleased(true);
                             }
 
-                            System.out.println(superParticles);
-                            if (superParticles instanceof SuperMagicParticle) {
-                                superParticles.setWillDisplay(true);
-                                superParticles.setKeepAlive(true);
-                            }
-                        } else {
                         }
                     }
                     //それ以外
                     else {
-                        world.addParticle(particleType, particlePos.x, particlePos.y, particlePos.z, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
+
+                        //もし初期状態ならばMagicParticleの召喚
+                        if (timerBool.getBoolean(0)) {
+                            if (particles instanceof MagicParticle) {
+                                particles.remove();
+                            }
+                            if (superParticles instanceof SuperMagicParticle) {
+                                superParticles.setMagicReleased(true);
+                            }
+
+                            particles = summonMagicParticle(particlePos);
+
+                            if (particles instanceof MagicParticle) {
+                                particles.setPlayerEntity(playerEntity);
+                                particles.setKeepAlive(true);
+                                particles.setWillDisplay(true);
+                            }
+
+                            timerBool.set(0,false);
+                        } else
+
+                        //そうでなければエフェクトとしてエンチャントパーティクルを出し続ける。
+                        {
+                            world.addParticle(particleType, particlePos.x, particlePos.y, particlePos.z, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
+                        }
                     }
                     particleCount++;
+
                     if (!isUsing) {
                         timerBool.set(0,true);
                         timerBool.set(1,true);
+                        timerBool.set(2,true);
+                        if (particles instanceof MagicParticle) {
+                            particles.setMagicReleased(true);
+                        }
+                        if (superParticles instanceof SuperMagicParticle) {
+                            superParticles.setMagicReleased(true);
+                        }
                         timer.cancel();
 
                     }

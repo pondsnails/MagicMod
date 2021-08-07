@@ -15,6 +15,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import static jp.kps8x9.m2.magicmod.particle.RenderType.MAGIC_PARTICLE;
 
 public class SuperMagicParticle extends SpriteTexturedParticle {
+    public static int howMany = 0;
     private final IAnimatedSprite sprites;
     private boolean initialized;
     private Quaternion firstQuaternion;
@@ -82,10 +83,12 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
         this.increased = false;
         this.setSpriteFromAge(sprite);
         this.n = 20;
-        this.sized = true;
+        this.sized = false;
         this.count = 0;
         this.keepAlive = false;
         this.willDisplay = false;
+        howMany++;
+        System.out.println("HowMany : " + howMany);
     }
 
     @Override
@@ -163,6 +166,10 @@ public class SuperMagicParticle extends SpriteTexturedParticle {
 
     public void setKeepAlive(boolean keepAlive) {
         this.keepAlive = keepAlive;
+    }
+
+    public void setSized(boolean sized) {
+        this.sized = sized;
     }
 
     public void setWillDisplay(boolean willDisplay) {

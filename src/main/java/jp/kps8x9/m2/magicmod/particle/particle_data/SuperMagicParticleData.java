@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class SuperMagicParticleData implements IParticleData {
-    public static final SuperMagicParticleData SUPER_MAGIC_CIRCLE = new SuperMagicParticleData(65, 191, 240, 50F, 5);
+    public static final SuperMagicParticleData SUPER_MAGIC_CIRCLE = new SuperMagicParticleData(65, 191, 240, 50F, 100);
 
     private UUID entity;
 

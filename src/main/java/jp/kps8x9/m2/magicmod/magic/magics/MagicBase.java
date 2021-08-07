@@ -12,7 +12,6 @@ public class MagicBase {
 
     public MagicBase() {}
 
-    //現在、属性のクラスを制作するまでに至っていないのでここはまだ作っていない。
     public void firstMagic(Vector3d point,float diameter) {
 
     }
