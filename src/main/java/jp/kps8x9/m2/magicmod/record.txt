@@ -16,14 +16,14 @@
     ->魔法陣のファイルを変える、もしくはポリゴン数を減らす
 
    夜
-    MahoujinRendererでNullPointerExceptionにより落ちていたことが判明。
+    MahoujinRendererでNullgrowingPointerExceptionにより落ちていたことが判明。
     ログは MeteoriteMod/run/crash-reports/crash-2021-05-23_02.25.45-client.txt 等による
     RendererのRegistryの方法やResourceLocationを変更するも、エラーのまま。
 
 2021/05/23:
 
     MahoujinBaseのスーパークラスをEntityに変更。
-    それによりNullPointerExceptionが発生しなくなったが、モデルが表示されないため、テクスチャをobjファイルに変更する予定。
+    それによりNullgrowingPointerExceptionが発生しなくなったが、モデルが表示されないため、テクスチャをobjファイルに変更する予定。
     -> objファイルに変更するも、テクスチャが反映されずに開発に難航。テクスチャをjsonファイルに変更する予定。
 
 2021/05/24:

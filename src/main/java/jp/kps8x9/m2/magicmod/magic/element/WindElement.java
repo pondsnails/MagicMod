@@ -10,12 +10,33 @@ public interface WindElement extends ElementBase {
 
     int additionalDamage = 2;
 
-    default void sideEffect(Vector3d windPos,float power) {
+    @Override
+    default void firstSideEffect(Vector3d point, float diameter) {
+        ElementBase.super.firstSideEffect(point, diameter);
+    }
 
+    @Override
+    default void secondSideEffect(Vector3d point, float diameter) {
+        ElementBase.super.secondSideEffect(point, diameter);
+    }
+
+    @Override
+    default void thirdSideEffect(Vector3d point, float diameter) {
+        ElementBase.super.thirdSideEffect(point, diameter);
     }
 
     @Override
     default int getAdditionalDamage() {
         return this.additionalDamage;
+    }
+
+    @Override
+    default Color getDarkColor() {
+        return this.DarkWind;
+    }
+
+    @Override
+    default Color getLightColor() {
+        return this.LightWind;
     }
 }

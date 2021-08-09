@@ -1,6 +1,7 @@
 package jp.kps8x9.m2.magicmod.items;
 
 import jp.kps8x9.m2.magicmod.magic.magics.NonMagic;
+import jp.kps8x9.m2.magicmod.magic.magics.WaterMagic;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
